@@ -3,48 +3,47 @@
 <head>
 <meta charset="UTF-8">
 <title>FandiBattleRoyale</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <!-- LOBBY -->
 <div id="lobby">
-  <div class="top-left">
-    <div class="profile">👤 Fandi<br>Lv 1</div>
+  <div class="top-bar">
+    <div>👤 Fandi | Lv <span id="level">1</span></div>
+    <div>💰 <span id="coin">1000</span> 💎 <span id="diamond">50</span></div>
   </div>
 
-  <div class="top-right">
-    💰 1000 &nbsp; 💎 50
-  </div>
-
-  <div id="character-preview">🧍‍♂️</div>
+  <canvas id="charCanvas"></canvas>
 
   <div class="menu">
-    <button>Shop</button>
-    <button>Lucky Spin</button>
-    <button>Karakter</button>
-    <button>Vault</button>
-    <button>Senjata</button>
-    <button onclick="startGame()">START</button>
+    <button onclick="openMenu('shop')">Shop</button>
+    <button onclick="openMenu('vault')">Vault</button>
+    <button onclick="openMenu('weapon')">Senjata</button>
+    <button onclick="openMenu('topup')">Top Up</button>
+    <button onclick="openMenu('dev')">Developer</button>
+    <button class="start" onclick="startGame()">START</button>
   </div>
 </div>
 
-<!-- GAME HUD -->
-<div id="hud" style="display:none;">
-  <div id="hp-bar">
-    <div id="hp"></div>
-  </div>
-
-  <div id="stats">
-    Lv 1 | 💰 1000 | 💎 50
-  </div>
+<!-- HUD GAME -->
+<div id="hud">
+  <div id="hpBar"><div id="hp"></div></div>
+  <div id="info">Lv <span id="gLevel"></span> | 💰 <span id="gCoin"></span></div>
+  <div id="zone">SAFE ZONE</div>
 
   <div id="joystick"></div>
   <button id="shoot">🔫</button>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.152/build/three.min.js"></script>
+<script src="libs/GLTFLoader.js"></script>
+
+<script src="storage.js"></script>
+<script src="lobby.js"></script>
 <script src="game.js"></script>
+<script src="ui.js"></script>
+<script src="main.js"></script>
 </body>
-  </html>
+                                                 </html>
