@@ -1,87 +1,80 @@
-// Scene
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x202020);
+let scene, camera, renderer;
+let enemies = [];
+let playerHP = 100;
 
-// Camera
-const camera = new THREE.PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-);
-camera.position.y = 1.6;
+function startGame(){
+  document.getElementById("lobby").style.display = "none";
+  document.getElementById("hud").style.display = "block";
+  initGame();
+}
 
-// Renderer
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+function initGame(){
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x87ceeb);
 
-// Light
-const light = new THREE.DirectionalLight(0xffffff, 1);
-light.position.set(5, 10, 7);
-scene.add(light);
+  camera = new THREE.PerspectiveCamera(75, innerWidth/innerHeight, 0.1, 1000);
+  camera.position.set(0,1.6,5);
 
-// Floor
-const floor = new THREE.Mesh(
-  new THREE.PlaneGeometry(100, 100),
-  new THREE.MeshStandardMaterial({ color: 0x444444 })
-);
-floor.rotation.x = -Math.PI / 2;
-scene.add(floor);
+  renderer = new THREE.WebGLRenderer();
+  renderer.setSize(innerWidth, innerHeight);
+  document.body.appendChild(renderer.domElement);
 
-// Player movement
-const keys = {};
-document.addEventListener("keydown", e => keys[e.key.toLowerCase()] = true);
-document.addEventListener("keyup", e => keys[e.key.toLowerCase()] = false);
+  const light = new THREE.DirectionalLight(0xffffff,1);
+  light.position.set(5,10,5);
+  scene.add(light);
 
-// Enemy
-const enemy = new THREE.Mesh(
-  new THREE.BoxGeometry(1, 1, 1),
-  new THREE.MeshStandardMaterial({ color: 0xff0000 })
-);
-enemy.position.set(0, 0.5, -10);
-scene.add(enemy);
-
-// Bullet
-const bullets = [];
-document.addEventListener("click", () => {
-  const bullet = new THREE.Mesh(
-    new THREE.SphereGeometry(0.1, 8, 8),
-    new THREE.MeshBasicMaterial({ color: 0xffff00 })
+  // MAP LUAS
+  const ground = new THREE.Mesh(
+    new THREE.PlaneGeometry(300,300),
+    new THREE.MeshStandardMaterial({color:0x228b22})
   );
-  bullet.position.copy(camera.position);
-  bullet.velocity = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
-  bullets.push(bullet);
-  scene.add(bullet);
-});
+  ground.rotation.x = -Math.PI/2;
+  scene.add(ground);
 
-// Resize
-window.addEventListener("resize", () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-});
+  // SPAWN MUSUH
+  for(let i=0;i<15;i++){
+    spawnEnemy();
+  }
 
-// Game Loop
-function animate() {
+  animate();
+}
+
+function spawnEnemy(){
+  const e = new THREE.Mesh(
+    new THREE.BoxGeometry(1,2,1),
+    new THREE.MeshStandardMaterial({color:0xff0000})
+  );
+  e.position.set(
+    (Math.random()-0.5)*100,
+    1,
+    (Math.random()-0.5)*100
+  );
+  enemies.push(e);
+  scene.add(e);
+}
+
+// SHOOT
+document.getElementById("shoot").onclick = ()=>{
+  enemies.forEach((e,i)=>{
+    if(e.position.distanceTo(camera.position)<15){
+      scene.remove(e);
+      enemies.splice(i,1);
+    }
+  });
+};
+
+function animate(){
   requestAnimationFrame(animate);
 
-  const speed = 0.1;
-  if (keys["w"]) camera.position.z -= speed;
-  if (keys["s"]) camera.position.z += speed;
-  if (keys["a"]) camera.position.x -= speed;
-  if (keys["d"]) camera.position.x += speed;
+  enemies.forEach(e=>{
+    e.lookAt(camera.position);
+    e.position.lerp(camera.position,0.002);
 
-  bullets.forEach((b, i) => {
-    b.position.add(b.velocity.clone().multiplyScalar(0.5));
-
-    if (b.position.distanceTo(enemy.position) < 1) {
-      scene.remove(enemy);
-      alert("Musuh Kalah!");
+    if(e.position.distanceTo(camera.position)<1.5){
+      playerHP -= 0.1;
+      document.getElementById("hp").style.width = playerHP+"%";
     }
   });
 
-  renderer.render(scene, camera);
-}
-
-animate();
+  renderer.render(scene,camera);
+  }
