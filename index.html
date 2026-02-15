@@ -1,18 +1,50 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <title>FandiBattleRoyale</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>FandiBattleRoyale</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="hud">
-    <h1>FandiBattleRoyale</h1>
-    <p>WASD = Gerak | Klik = Tembak</p>
+
+<!-- LOBBY -->
+<div id="lobby">
+  <div class="top-left">
+    <div class="profile">👤 Fandi<br>Lv 1</div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
-  <script src="game.js"></script>
+  <div class="top-right">
+    💰 1000 &nbsp; 💎 50
+  </div>
+
+  <div id="character-preview">🧍‍♂️</div>
+
+  <div class="menu">
+    <button>Shop</button>
+    <button>Lucky Spin</button>
+    <button>Karakter</button>
+    <button>Vault</button>
+    <button>Senjata</button>
+    <button onclick="startGame()">START</button>
+  </div>
+</div>
+
+<!-- GAME HUD -->
+<div id="hud" style="display:none;">
+  <div id="hp-bar">
+    <div id="hp"></div>
+  </div>
+
+  <div id="stats">
+    Lv 1 | 💰 1000 | 💎 50
+  </div>
+
+  <div id="joystick"></div>
+  <button id="shoot">🔫</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+<script src="game.js"></script>
 </body>
-</html>
+  </html>
